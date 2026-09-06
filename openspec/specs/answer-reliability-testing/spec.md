@@ -44,7 +44,7 @@ The tester SHALL require the API key through the existing environment-based conf
 - **THEN** no evidence field or serialized diagnostic SHALL contain the key value
 
 ### Requirement: Conservative automatic screening
-The tester SHALL produce one of `PASS_LIKELY`, `FAIL_LIKELY`, `NEEDS_REVIEW`, or `RUNTIME_ERROR`, and SHALL use `NEEDS_REVIEW` whenever the available deterministic evidence cannot safely distinguish a correct answer from a negation, quotation, uncertainty, or fact-versus-inference ambiguity. When evaluating a target phrase, the screening rules SHALL consider all occurrences of that phrase in the answer: a quoted occurrence that is explicitly negated SHALL satisfy a required negation boundary only when no unquoted, affirmative occurrence contradicts it; a quoted or negated wrong conclusion SHALL NOT by itself produce `FAIL_LIKELY`. Negation detection SHALL recognize both direct negation markers and verbs that express leaving or stopping a prior state (such as 辞去、辞职、离职、离开、放弃、停止、不再、退出、卸任、终止、中断), so that an answer like 「辞去了盐镇中学的工作」 is treated as negating the superseded fact 「在盐镇中学教书」 rather than asserting it.
+The tester SHALL produce one of `PASS_LIKELY`, `FAIL_LIKELY`, `NEEDS_REVIEW`, or `RUNTIME_ERROR`, and SHALL use `NEEDS_REVIEW` whenever the available deterministic evidence cannot safely distinguish a correct answer from a negation, quotation, uncertainty, or fact-versus-inference ambiguity. Before applying screening rules, the tester SHALL normalize the answer text by stripping markdown formatting markers (such as `**`, `*`, `>`, `#`, and backticks) so that a phrase broken by formatting is still recognized as contiguous. When evaluating a target phrase, the screening rules SHALL consider all occurrences of that phrase in the normalized answer: a quoted occurrence that is explicitly negated SHALL satisfy a required negation boundary only when no unquoted, affirmative occurrence contradicts it; a quoted or negated wrong conclusion SHALL NOT by itself produce `FAIL_LIKELY`. For a `mustContain` phrase, a quoted occurrence SHALL count as a satisfied occurrence unless it is negated; for `wrongConclusions` and `mustNegate`, a quoted occurrence SHALL NOT by itself count as an assertion. Negation detection SHALL recognize both direct negation markers and verbs that express leaving or stopping a prior state (such as 辞去、辞职、离职、离开、放弃、停止、不再、退出、卸任、终止、中断), so that an answer like 「辞去了盐镇中学的工作」 is treated as negating the superseded fact 「在盐镇中学教书」 rather than asserting it. Uncertainty detection SHALL recognize explicit unknown markers including 未知、未提及、无法得知、无法确定、没有提供、没有出现、文中没有、未提供 and their equivalents. Inferential wording (可能、推断、似乎) SHALL NOT by itself force `NEEDS_REVIEW` when the factual boundary is otherwise clearly met and no wrong conclusion is asserted.
 
 #### Scenario: Deterministic runtime result
 - **WHEN** the driver fails to start, times out, exits unexpectedly, or returns an invalid terminal state
@@ -74,6 +74,22 @@ The tester SHALL produce one of `PASS_LIKELY`, `FAIL_LIKELY`, `NEEDS_REVIEW`, or
 - **WHEN** an answer expresses leaving or stopping a prior state with a verb such as 辞去、离开、放弃、停止、退出 or 不再 immediately before the superseded fact's phrase
 - **THEN** the screening SHALL treat that occurrence as negated and SHALL NOT classify the superseded fact as asserted
 
+#### Scenario: Markdown formatting does not break phrase matching
+- **WHEN** the answer contains markdown markers such as `**不在**` that split a target phrase
+- **THEN** the screening SHALL strip those markers and recognize the underlying contiguous phrase when classifying negation or presence
+
+#### Scenario: Quoted correct fact satisfies a required boundary
+- **WHEN** a `mustContain` phrase appears only inside a quotation the model uses to state the correct fact, and the phrase is not negated
+- **THEN** the screening SHALL treat the required boundary as satisfied rather than reporting it as missing
+
+#### Scenario: Uncertainty expressed with equivalent wording
+- **WHEN** an unknown-information case answer expresses uncertainty with wording such as 无法得知、没有提供 or 文中没有 instead of the literal 未知 or 未提及
+- **THEN** the screening SHALL recognize the uncertainty and SHALL NOT report it as an unsupported definite assertion
+
+#### Scenario: Inferential wording around a definite conclusion
+- **WHEN** an answer reaches a definite conclusion that matches the factual boundary but frames it with inferential wording such as 可推断
+- **THEN** the screening SHALL NOT force `NEEDS_REVIEW` solely because of the inferential wording when the boundary is clearly met and no wrong conclusion is asserted
+
 ### Requirement: Separate human review outcome
 The tester SHALL keep human review data separate from the automatic result and SHALL support the review outcomes `MODEL_OK`, `MODEL_ERROR`, `SCORER_ERROR`, and `UNRESOLVED`.
 
@@ -93,10 +109,18 @@ The initial case set SHALL include version conflict, explicit negation, unknown 
 - **THEN** the case SHALL allow an explicit uncertainty outcome and SHALL treat an unsupported definite assertion as a candidate reliability failure
 
 ### Requirement: Proposition-level boundary phrases
-Each `mustNegate` and `wrongConclusions` entry SHALL be a complete proposition phrase that includes an action or relation word identifying the fact being negated or concluded, and SHALL NOT be a bare entity name used alone — a person name, place name, object name, or institution name. A bare entity name is one the model's correct answer legitimately mentions while explaining, contrasting, or tracing a relationship (for example 「林蔓住在盐城」 mentions 「盐城」, or 「外婆留给母亲」 mentions 「母亲」), so using it alone causes a false `FAIL_LIKELY`. A `mustNegate` phrase SHALL omit tense/aspect auxiliaries (such as 还在 or 仍然) so it can match the usual negation wording (for example `在盐镇中学教书` rather than `还在盐镇中学教书`).
+Each `mustNegate` and `wrongConclusions` entry SHALL be a complete proposition phrase that includes an action or relation word identifying the fact being negated or concluded, and SHALL NOT be a bare entity name used alone — a person name, place name, object name, or institution name. It SHALL also NOT be a bare kinship or occupation term (such as 侄子、儿子、医生、教师) or a predicate phrase lacking its subject (such as 住在盐城) when such a bare phrase can legitimately appear inside a correct answer while explaining, contrasting, or tracing a relationship. A bare entity name is one the model's correct answer legitimately mentions while explaining, contrasting, or tracing a relationship (for example 「林蔓住在盐城」 mentions 「盐城」, or 「外婆留给母亲」 mentions 「母亲」), so using it alone causes a false `FAIL_LIKELY`. A `mustNegate` phrase SHALL omit tense/aspect auxiliaries (such as 还在 or 仍然) so it can match the usual negation wording (for example `在盐镇中学教书` rather than `还在盐镇中学教书`).
 
 #### Scenario: Bare entity name is rejected
 - **WHEN** a case's `mustNegate` or `wrongConclusions` contains a bare person, place, object, or institution name with no action or relation word
+- **THEN** the fixture validation SHALL flag it as an invalid boundary phrase rather than silently scoring it
+
+#### Scenario: Bare kinship or occupation term is rejected
+- **WHEN** a case's `wrongConclusions` contains a bare kinship or occupation term such as 侄子 or 医生 that could appear inside a correct hedged answer
+- **THEN** the fixture validation SHALL flag it as an invalid boundary phrase rather than silently scoring it
+
+#### Scenario: Subject-less predicate is rejected
+- **WHEN** a case's `wrongConclusions` or `mustNegate` contains a predicate phrase such as 住在盐城 without the subject that identifies whose residence is being negated
 - **THEN** the fixture validation SHALL flag it as an invalid boundary phrase rather than silently scoring it
 
 #### Scenario: Proposition phrase matches negation wording
