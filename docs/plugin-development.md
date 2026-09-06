@@ -33,7 +33,7 @@ export default apply;
 | `fault` | 故障注入（`enabled` 默认 false，启用后 `timeout` / `cancel` / `protocolError` / `simulatedAbnormalExit`，其中异常退出为「模拟」能力，结构化返回 error 结果，不真实终止进程） |
 | `observe(raw, ctx)` | 把原始 DSH 生命周期事件归一化为 `DshTraceEvent` 并转发给 sink |
 
-## 约束（设计文档第 6 节）
+## 约束
 
 - 不注册供模型自主调用的可靠性测试 Tool；
 - 不修改请求参数或模型回答；

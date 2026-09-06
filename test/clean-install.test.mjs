@@ -11,7 +11,7 @@ const read = (p) => readFileSync(p, "utf8");
 
 const README_PATH = join(root, "README.md");
 
-test("README 第一屏给出 clone/install/doctor/离线运行/真实运行", () => {
+test("README 给出 clone/install/doctor/离线运行/真实运行", () => {
   assert.ok(existsSync(README_PATH), "插件项目 README 存在");
   const text = read(README_PATH);
   for (const needle of ["git clone", "npm install", "doctor", "--mode mock", "--mode real"]) {

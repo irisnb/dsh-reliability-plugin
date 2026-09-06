@@ -39,4 +39,4 @@
 }
 ```
 
-`material.hash` 必须是 `material.text` 的 SHA-256（前缀 `sha256:`）。`allowedUncertainty` 非空表示该案例接受“未知/未提及”为正确回答。更多案例见 `fixtures/basic.jsonl` 与 `sidecar/reliability/fixtures/`。
+`material.hash` 必须是 `material.text` 的 SHA-256（前缀 `sha256:`）。`allowedUncertainty` 非空表示该案例接受“未知/未提及”为正确回答。更多案例见 `fixtures/basic.jsonl`。
