@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { materialHash, countChars, estimateTokens, mulberry32, generateTier } from "../long-context/generator.mjs";
-import { validateAll, loadFromDisk } from "../long-context/validate.mjs";
+import { validateAll, validateTier, isBoundaryBadPhrase, loadFromDisk } from "../long-context/validate.mjs";
 import { buildTierCases } from "../long-context/build-cases.mjs";
 import { loadAndValidate } from "../schema.mjs";
 
@@ -127,4 +127,45 @@ test("手写档标记 handwritten 且 seed 为 null，正文来自手写 txt", (
   assert.equal(cfg.seed, null, "coherent-10k seed 应为 null（非种子生成）");
   assert.equal(materials["coherent-10k"].seed, null, "手写档材料 seed 应为 null");
   assert.ok(materials["coherent-10k"].char_count >= 9500 && materials["coherent-10k"].char_count <= 10500, "手写档字数应在 1 万字容差内");
+});
+
+test("validateTier 拒绝 mustNegate/wrongConclusions 中的裸亲属称谓、裸职业词与缺主语谓词", () => {
+  const { manifest, materials, oracles } = loadFromDisk();
+  const tierKey = manifest.tiers[0].tier;
+  const base = oracles[tierKey];
+
+  // 构造一份「合法档」副本：把会被新校验拒绝的边界短语过滤掉，其余保持不变，作为注入基准。
+  const clean = structuredClone(base);
+  for (const q of clean.queries) {
+    const fb = q.expect?.factBoundary ?? {};
+    if (Array.isArray(fb.mustNegate)) fb.mustNegate = fb.mustNegate.filter((p) => !isBoundaryBadPhrase(p));
+    if (Array.isArray(q.expect?.wrongConclusions)) q.expect.wrongConclusions = q.expect.wrongConclusions.filter((p) => !isBoundaryBadPhrase(p));
+  }
+  assert.equal(validateTier(tierKey, manifest, materials[tierKey], clean).ok, true, "清洗后的副本应为合法档（基准）");
+
+  const categories = {
+    裸亲属称谓: ["侄子", "儿子", "女儿", "外甥", "外甥女", "兄弟", "儿媳", "徒弟"],
+    裸职业词: ["医生", "教师", "老师", "邮差", "警察", "演员", "渔民", "木匠", "猎户", "策展人"],
+    缺主语谓词: ["住在盐镇", "在盐镇中学教书", "在城西的邮局工作", "在望山岗负责邮路", "母亲留下的", "拆开看了", "还是灯塔"],
+  };
+
+  for (const [label, phrases] of Object.entries(categories)) {
+    for (const phrase of phrases) {
+      for (const field of ["mustNegate", "wrongConclusions"]) {
+        const copy = structuredClone(clean);
+        const q = copy.queries[0];
+        if (field === "mustNegate") {
+          q.expect.factBoundary.mustNegate.push(phrase);
+        } else {
+          q.expect.wrongConclusions.push(phrase);
+        }
+        const report = validateTier(tierKey, manifest, materials[tierKey], copy);
+        assert.equal(report.ok, false, `${label}「${phrase}」进入 ${field} 应使 ok=false`);
+        assert.ok(
+          report.checks.some((c) => c.name === "no-bare-kindred-occupation-predicate" && c.ok === false),
+          `${label}「${phrase}」应触发 no-bare-kindred-occupation-predicate 校验`
+        );
+      }
+    }
+  }
 });

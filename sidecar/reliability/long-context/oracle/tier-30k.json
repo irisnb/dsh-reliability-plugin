@@ -221,8 +221,8 @@
           "mustNegate": []
         },
         "wrongConclusions": [
-          "渔民",
-          "教师"
+          "陆征是渔民",
+          "陆征是教师"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -249,13 +249,13 @@
       "expect": {
         "factBoundary": {
           "mustContain": [
-            "儿子"
+            "陆远是陆芸的儿子"
           ],
           "mustNegate": []
         },
         "wrongConclusions": [
-          "兄弟",
-          "外甥"
+          "陆远和陆芸是兄弟",
+          "陆远是陆芸的外甥"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -283,13 +283,13 @@
       "expect": {
         "factBoundary": {
           "mustContain": [
-            "侄子"
+            "顾成是陆芸的侄子"
           ],
           "mustNegate": []
         },
         "wrongConclusions": [
-          "儿子",
-          "外甥"
+          "顾成是陆芸的儿子",
+          "顾成是陆芸的外甥"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -317,13 +317,13 @@
       "expect": {
         "factBoundary": {
           "mustContain": [
-            "策展人"
+            "白露是策展人"
           ],
           "mustNegate": []
         },
         "wrongConclusions": [
-          "医生",
-          "演员"
+          "白露是医生",
+          "白露是演员"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -356,7 +356,7 @@
           "mustNegate": []
         },
         "wrongConclusions": [
-          "住在白鹭镇"
+          "陆远住在白鹭镇"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -386,11 +386,11 @@
             "白鹭镇"
           ],
           "mustNegate": [
-            "住在白鹭洲"
+            "陆遥住在白鹭洲"
           ]
         },
         "wrongConclusions": [
-          "住在白鹭洲"
+          "陆遥住在白鹭洲"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -418,13 +418,13 @@
       "expect": {
         "factBoundary": {
           "mustContain": [
-            "教书"
+            "陆远在白鹭洲教书"
           ],
           "mustNegate": []
         },
         "wrongConclusions": [
-          "摄影",
-          "警察"
+          "陆遥从事摄影",
+          "陆遥是警察"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -456,7 +456,7 @@
           "mustNegate": []
         },
         "wrongConclusions": [
-          "在印刷厂工作"
+          "陆遥还在城北的印刷厂工作"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -486,11 +486,11 @@
             "摄影工作室"
           ],
           "mustNegate": [
-            "在印刷厂工作"
+            "陆遥还在城北的印刷厂工作"
           ]
         },
         "wrongConclusions": [
-          "还在印刷厂"
+          "陆遥还在城北的印刷厂工作"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -522,7 +522,7 @@
           "mustNegate": []
         },
         "wrongConclusions": [
-          "还是灯塔"
+          "旧灯塔还是灯塔"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -615,11 +615,11 @@
             "城西的文化馆"
           ],
           "mustNegate": [
-            "在城东的画廊举办"
+            "摄影展在城东的画廊举办"
           ]
         },
         "wrongConclusions": [
-          "在城东的画廊举办"
+          "摄影展在城东的画廊举办"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -649,11 +649,11 @@
             "父亲"
           ],
           "mustNegate": [
-            "母亲留下的"
+            "老式相机是母亲留下的"
           ]
         },
         "wrongConclusions": [
-          "母亲留下的"
+          "老式相机是母亲留下的"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -689,8 +689,8 @@
           "mustNegate": []
         },
         "wrongConclusions": [
-          "母亲留下的",
-          "顾成留下的"
+          "老式相机是母亲留下的",
+          "老式相机是顾成留下的"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -721,7 +721,7 @@
       "expect": {
         "factBoundary": {
           "mustContain": [
-            "江眠"
+            "江眠是回声旅馆老板娘"
           ],
           "mustNegate": []
         },

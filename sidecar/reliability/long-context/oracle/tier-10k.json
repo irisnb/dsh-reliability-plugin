@@ -175,8 +175,8 @@
           "mustNegate": []
         },
         "wrongConclusions": [
-          "侄子",
-          "儿子"
+          "沈砚是苏梅的侄子",
+          "沈砚是苏梅的儿子"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -209,8 +209,8 @@
           "mustNegate": []
         },
         "wrongConclusions": [
-          "医生",
-          "教师"
+          "陈屿是医生",
+          "陈屿是教师"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -243,7 +243,7 @@
           "mustNegate": []
         },
         "wrongConclusions": [
-          "住在盐镇"
+          "苏蔓住在盐镇"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -273,11 +273,11 @@
             "盐镇"
           ],
           "mustNegate": [
-            "住在盐城"
+            "苏晚住在盐城"
           ]
         },
         "wrongConclusions": [
-          "住在盐城"
+          "苏晚住在盐城"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -310,7 +310,7 @@
           "mustNegate": []
         },
         "wrongConclusions": [
-          "在盐镇中学教书"
+          "苏晚在盐镇中学教书"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -340,11 +340,11 @@
             "出版社"
           ],
           "mustNegate": [
-            "在盐镇中学教书"
+            "苏晚还在盐镇中学教书"
           ]
         },
         "wrongConclusions": [
-          "还在盐镇中学"
+          "苏晚还在盐镇中学教书"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [

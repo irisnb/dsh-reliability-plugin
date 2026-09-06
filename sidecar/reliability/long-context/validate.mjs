@@ -40,6 +40,30 @@ const ORACLE_MARKERS = [
   "material_hash",
 ];
 
+// 裸亲属称谓 / 裸职业词 / 缺主语谓词：这些短语会被正确回答合法提及，
+// 放进 mustNegate/wrongConclusions 会造成误判，属于非法边界短语。
+export const BARE_KINSHIP_TERMS = new Set([
+  "侄子", "儿子", "女儿", "外甥", "外甥女", "兄弟", "儿媳", "徒弟",
+]);
+export const BARE_OCCUPATION_TERMS = new Set([
+  "医生", "教师", "老师", "邮差", "警察", "演员", "渔民", "木匠", "猎户", "策展人",
+]);
+export const SUBJECTLESS_PREDICATE_RES = [
+  /^住在.+$/,
+  /^在.+(工作|教书|负责邮路)$/,
+  /^(?:母亲|父亲|沈砚|顾成)留下的$/,
+  /^拆开看了$/,
+  /^还是.+$/,
+];
+
+export function isBoundaryBadPhrase(phrase) {
+  return (
+    BARE_KINSHIP_TERMS.has(phrase) ||
+    BARE_OCCUPATION_TERMS.has(phrase) ||
+    SUBJECTLESS_PREDICATE_RES.some((re) => re.test(phrase))
+  );
+}
+
 function readJson(p) {
   return JSON.parse(readFileSync(p, "utf8"));
 }
@@ -120,6 +144,14 @@ export function validateTier(tierKey, manifest, material, oracle) {
     return phrases.filter((p) => entityNames.has(p)).map((p) => `${q.id}:「${p}」`);
   });
   push("no-bare-entity-in-boundary", bareEntities.length === 0, bareEntities.length ? `裸实体词：${bareEntities.join("、")}` : "mustNegate/wrongConclusions 无裸实体词");
+
+  // 10. 裸亲属称谓 / 裸职业词 / 缺主语谓词：mustNegate/wrongConclusions 不得写成会被正确回答合法提及的片段
+  const badBoundaryPhrases = queries.flatMap((q) => {
+    const fb = q.expect?.factBoundary ?? {};
+    const phrases = [...(fb.mustNegate ?? []), ...(q.expect?.wrongConclusions ?? [])];
+    return phrases.filter(isBoundaryBadPhrase).map((p) => `${q.id}:「${p}」`);
+  });
+  push("no-bare-kindred-occupation-predicate", badBoundaryPhrases.length === 0, badBoundaryPhrases.length ? `非法边界短语（裸亲属/职业/缺主语谓词）：${badBoundaryPhrases.join("、")}` : "mustNegate/wrongConclusions 无裸亲属/职业/缺主语谓词");
 
   return { tier: tierKey, ok: checks.every((c) => c.ok), checks };
 }

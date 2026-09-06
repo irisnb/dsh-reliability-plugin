@@ -75,9 +75,9 @@ test("未知信息案例：给出确定性陈述且无不确定表达进入人�
 });
 
 // ── 确定性案例出现不确定/推断表达 → NEEDS_REVIEW ─────────────────────────────
-test("确定性案例出现推断措辞进入人工复核（事实与推测边界）", () => {
+test("确定性案例：mustContain 未命中且含推断措辞进入人工复核（事实与推测边界）", () => {
   const expect = { factBoundary: { mustContain: ["城西的画廊"], mustNegate: [] }, wrongConclusions: [], allowedUncertainty: [] };
-  const r = screenAnswer(expect, "她可能是在城西的画廊上班。");
+  const r = screenAnswer(expect, "她可能是在某个画廊上班。");
   assert.equal(r.result, RESULT_NEEDS_REVIEW);
 });
 
@@ -213,4 +213,46 @@ test("传承链：wrongConclusions 写完整命题后，追述传承链不再误
   const r = screenAnswer(expect, "林晚的怀表是外婆留给她的。怀表是外婆留给母亲的，母亲又留给了她。");
   assert.notEqual(r.result, RESULT_FAIL_LIKELY);
   assert.ok(!r.reasons.some((x) => x.includes("断言了明确错误结论")));
+});
+
+// ── fix-screener-residual-defects 回归（D1 markdown 剥离）───────────────────
+test("markdown 打断的否定短语仍被识别（评分前剥离 markdown）", () => {
+  const expect = { factBoundary: { mustContain: ["摄影工作室"], mustNegate: ["在印刷厂工作"] }, wrongConclusions: ["还在印刷厂"], allowedUncertainty: [] };
+  const r = screenAnswer(expect, "陆遥现在**不在**印刷厂工作，他去了摄影工作室。");
+  assert.equal(r.result, RESULT_PASS_LIKELY);
+});
+
+test("真实证据：加粗否定 + 引用原文命中 mustContain 判 PASS（案例 30k-11）", () => {
+  const expect = { factBoundary: { mustContain: ["摄影工作室"], mustNegate: ["在印刷厂工作"] }, wrongConclusions: ["还在印刷厂"], allowedUncertainty: [] };
+  const answer = "根据材料内容，陆遥现在**不在**印刷厂工作。\n\n依据是第五章《换工作》中明确写道：\n\n> “陆遥原本在城北的印刷厂做排版，后来辞职去了云峰山下的摄影工作室。”";
+  const r = screenAnswer(expect, answer);
+  assert.equal(r.result, RESULT_PASS_LIKELY);
+  assert.ok(!r.reasons.some((x) => x.includes("未明确命中") || x.includes("未明确否定")));
+});
+
+// ── fix-screener-residual-defects 回归（D2 mustContain 引文命中）──────────────
+test("引用的正确事实命中 mustContain（引用不算断言但仍算命中）", () => {
+  const expect = { factBoundary: { mustContain: ["城西的文化馆"], mustNegate: [] }, wrongConclusions: ["在城东的画廊举办"], allowedUncertainty: [] };
+  const r = screenAnswer(expect, "材料明确写道：“摄影展最后办在城西的文化馆”，策展人是陈屿。");
+  assert.equal(r.result, RESULT_PASS_LIKELY);
+});
+
+// ── fix-screener-residual-defects 回归（D3 不确定同义）───────────────────────
+test("detectUncertainty 识别扩充的同义未知表达", () => {
+  for (const w of ["无法得知", "没有提供", "文中没有", "没有出现", "未提供", "不存在"]) {
+    assert.ok(detectUncertainty(w).explicitUnknown.length > 0, `应识别「${w}」`);
+  }
+});
+
+test("未知信息案例：同义表达「无法得知」判 PASS_LIKELY", () => {
+  const expect = { factBoundary: { mustContain: [], mustNegate: [] }, wrongConclusions: [], allowedUncertainty: ["未知"] };
+  const r = screenAnswer(expect, "材料没有提供相关线索，无法得知她的年龄。");
+  assert.equal(r.result, RESULT_PASS_LIKELY);
+});
+
+// ── fix-screener-residual-defects 回归（D4 推断措辞不阻断）───────────────────
+test("明确结论含「可推断」不再阻断（事实边界已命中）", () => {
+  const expect = { factBoundary: { mustContain: ["陆芸是陆远的母亲"], mustNegate: [] }, wrongConclusions: [], allowedUncertainty: [] };
+  const r = screenAnswer(expect, "可推断陆芸是陆远的母亲。");
+  assert.equal(r.result, RESULT_PASS_LIKELY);
 });

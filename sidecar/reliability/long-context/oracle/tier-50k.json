@@ -238,7 +238,7 @@
         },
         "wrongConclusions": [
           "渔夫",
-          "木匠"
+          "陈大川是木匠"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -265,13 +265,13 @@
       "expect": {
         "factBoundary": {
           "mustContain": [
-            "邮差"
+            "陈渡是邮差"
           ],
           "mustNegate": []
         },
         "wrongConclusions": [
-          "医生",
-          "教师"
+          "陈渡是医生",
+          "陈渡是教师"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -298,13 +298,13 @@
       "expect": {
         "factBoundary": {
           "mustContain": [
-            "女儿"
+            "阿黎是陈桂芳的女儿"
           ],
           "mustNegate": []
         },
         "wrongConclusions": [
-          "儿媳",
-          "外甥女"
+          "阿黎是陈桂芳的儿媳",
+          "阿黎是陈桂芳的外甥女"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -332,13 +332,13 @@
       "expect": {
         "factBoundary": {
           "mustContain": [
-            "外甥女"
+            "沈青梧是陈桂芳的外甥女"
           ],
           "mustNegate": []
         },
         "wrongConclusions": [
-          "女儿",
-          "儿媳"
+          "沈青梧是陈桂芳的女儿",
+          "沈青梧是陈桂芳的儿媳"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -366,13 +366,13 @@
       "expect": {
         "factBoundary": {
           "mustContain": [
-            "侄子"
+            "小满是沈青梧的侄子"
           ],
           "mustNegate": []
         },
         "wrongConclusions": [
-          "儿子",
-          "徒弟"
+          "小满是沈青梧的儿子",
+          "小满是沈青梧的徒弟"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -400,13 +400,13 @@
       "expect": {
         "factBoundary": {
           "mustContain": [
-            "医生"
+            "沈青梧是医生"
           ],
           "mustNegate": []
         },
         "wrongConclusions": [
-          "教师",
-          "邮差"
+          "沈青梧是教师",
+          "沈青梧是邮差"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -439,7 +439,7 @@
           "mustNegate": []
         },
         "wrongConclusions": [
-          "住在望山集"
+          "阿黎住在望山集"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -469,11 +469,11 @@
             "望山集"
           ],
           "mustNegate": [
-            "住在望山岗"
+            "陈渡住在望山岗"
           ]
         },
         "wrongConclusions": [
-          "住在望山岗"
+          "陈渡住在望山岗"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -501,12 +501,12 @@
       "expect": {
         "factBoundary": {
           "mustContain": [
-            "老师"
+            "阿黎是老师"
           ],
           "mustNegate": []
         },
         "wrongConclusions": [
-          "邮差"
+          "阿黎是邮差"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -572,7 +572,7 @@
           "mustNegate": []
         },
         "wrongConclusions": [
-          "在城西的邮局工作"
+          "陈渡在城西的邮局工作"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -603,11 +603,11 @@
             "鹿角镇"
           ],
           "mustNegate": [
-            "在城西的邮局工作"
+            "陈渡还在城西的邮局工作"
           ]
         },
         "wrongConclusions": [
-          "还在城西的邮局"
+          "陈渡还在城西的邮局工作"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -639,7 +639,7 @@
           "mustNegate": []
         },
         "wrongConclusions": [
-          "还是磨坊"
+          "老磨坊还是磨坊"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -762,11 +762,11 @@
             "父亲"
           ],
           "mustNegate": [
-            "母亲留给他的"
+            "旧怀表是母亲留给陈渡的"
           ]
         },
         "wrongConclusions": [
-          "母亲留给他的"
+          "旧怀表是母亲留给陈渡的"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -797,11 +797,11 @@
             "鹿角镇"
           ],
           "mustNegate": [
-            "在望山岗负责邮路"
+            "陈渡在望山岗负责邮路"
           ]
         },
         "wrongConclusions": [
-          "在望山岗负责邮路"
+          "陈渡在望山岗负责邮路"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -828,14 +828,14 @@
       "expect": {
         "factBoundary": {
           "mustContain": [
-            "没拆"
+            "信没有拆开"
           ],
           "mustNegate": [
-            "拆开"
+            "陈渡拆开信看了"
           ]
         },
         "wrongConclusions": [
-          "拆开看了"
+          "陈渡拆开信看了"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -871,8 +871,8 @@
           "mustNegate": []
         },
         "wrongConclusions": [
-          "母亲留给他的",
-          "沈青梧留给他的"
+          "旧怀表是母亲留给陈渡的",
+          "旧怀表是沈青梧留给陈渡的"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -903,7 +903,7 @@
       "expect": {
         "factBoundary": {
           "mustContain": [
-            "沈青梧"
+            "沈青梧是青梧医馆的医生"
           ],
           "mustNegate": []
         },
@@ -940,7 +940,7 @@
       "expect": {
         "factBoundary": {
           "mustContain": [
-            "陈大川"
+            "陈大川是陈渡的父亲"
           ],
           "mustNegate": []
         },

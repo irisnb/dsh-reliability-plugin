@@ -165,21 +165,19 @@
     {
       "id": "lc-coherent-03",
       "category": "cross-chapter-relation",
-      "description": "跨章关系：沈砚是表哥（第二章）+ 林秀兰是母亲（第四章），推出甥舅关系。",
+      "description": "跨章关系：材料只明确沈砚是母亲这边的亲戚（第二章），未点明与林秀兰的具体关系。",
       "question": "沈砚和林秀兰是什么关系？",
       "steps": [],
       "expect": {
         "factBoundary": {
-          "mustContain": [
-            "外甥"
-          ],
+          "mustContain": [],
           "mustNegate": []
         },
-        "wrongConclusions": [
-          "侄子",
-          "儿子"
+        "wrongConclusions": [],
+        "allowedUncertainty": [
+          "未明确",
+          "母亲这边亲戚"
         ],
-        "allowedUncertainty": [],
         "evidenceLocations": [
           "第二章",
           "第四章"
@@ -205,13 +203,13 @@
       "expect": {
         "factBoundary": {
           "mustContain": [
-            "编辑"
+            "陈屿是编辑"
           ],
           "mustNegate": []
         },
         "wrongConclusions": [
-          "医生",
-          "教师"
+          "陈屿是医生",
+          "陈屿是教师"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -243,7 +241,7 @@
           "mustNegate": []
         },
         "wrongConclusions": [
-          "住在盐镇"
+          "林蔓住在盐镇"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -273,11 +271,11 @@
             "盐镇"
           ],
           "mustNegate": [
-            "住在盐城"
+            "林晚住在盐城"
           ]
         },
         "wrongConclusions": [
-          "住在盐城"
+          "林晚住在盐城"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -310,7 +308,7 @@
           "mustNegate": []
         },
         "wrongConclusions": [
-          "在盐镇中学教书"
+          "林晚在盐镇中学教书"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -340,11 +338,11 @@
             "出版社"
           ],
           "mustNegate": [
-            "在盐镇中学教书"
+            "林晚还在盐镇中学教书"
           ]
         },
         "wrongConclusions": [
-          "还在盐镇中学"
+          "林晚还在盐镇中学教书"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -437,11 +435,11 @@
             "城西的文化馆"
           ],
           "mustNegate": [
-            "在城东的画廊举办"
+            "摄影展在城东的画廊举办"
           ]
         },
         "wrongConclusions": [
-          "在城东的画廊举办"
+          "摄影展在城东的画廊举办"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [
@@ -477,8 +475,8 @@
           "mustNegate": []
         },
         "wrongConclusions": [
-          "母亲留给她的",
-          "沈砚留给她的"
+          "怀表是母亲留给林晚的",
+          "怀表是沈砚留给林晚的"
         ],
         "allowedUncertainty": [],
         "evidenceLocations": [

@@ -104,11 +104,11 @@ node -e "const c=require('crypto');const t='<你的正文>';console.log('sha256:
 | `NEEDS_REVIEW` | 否定、引用、未知、事实与推测边界等无法安全判定的自然语言 |
 | `RUNTIME_ERROR` | 驱动起不来、超时、提前退出、协议错误、`message_failed`、密钥泄漏 |
 
-**保守立场**：只用关键词做「足够明确」的判定；一旦答案含否定、引用、推断措辞，一律落到 `NEEDS_REVIEW`，绝不把关键词匹配冒充绝对裁判。
+**保守立场**：只用关键词做「足够明确」的判定；复杂否定、错误结论引用和同义改写仍会落到 `NEEDS_REVIEW`，绝不把关键词匹配冒充绝对裁判。评分前会剥离常见 Markdown 标记；`mustContain` 的正确事实在引用中也算命中，但 `wrongConclusions` / `mustNegate` 的引用仍进入人工复核。
 
 否定识别覆盖两类：直接否定词（没有/不是/未/否认…）与「脱离旧状态」的语义否定词（辞去/辞职/离职/离开/放弃/停止/不再/退出/卸任/终止/中断），所以「辞去了盐镇中学的工作」会正确识别为否定「在盐镇中学教书」，而非断言。
 
-**命题规范**：`mustNegate` / `wrongConclusions` 必须写含动作/关系词的完整命题短语（如「住在盐城」「母亲留给她的」「在盐镇中学教书」），禁止写裸实体名（如「盐城」「母亲」「盐镇中学」）。裸实体名会出现在正确回答里（「林蔓住盐城」「外婆留给母亲」），导致误判 `FAIL_LIKELY`。`mustContain` 仍可用裸词（它表示「答案应断言的事实」）。
+**命题规范**：`mustNegate` / `wrongConclusions` 必须写含主体、动作或关系词的完整命题短语（如「苏晚住在盐城」「老式相机是母亲留下的」「在盐镇中学教书」），禁止写裸实体、裸亲属/职业词或缺主语谓词。校验器会在生成长上下文 oracle 时拒绝这些边界短语。`mustContain` 也应优先写完整事实；对材料未唯一确定的事实，应使用 `allowedUncertainty`，而不是强行指定唯一答案。
 
 人工复核结论独立存储（`MODEL_OK` / `MODEL_ERROR` / `SCORER_ERROR` / `UNRESOLVED`），不覆盖自动原始结果——用于区分「模型答错」与「评分器误读引用/否定」。
 
@@ -126,3 +126,4 @@ node -e "const c=require('crypto');const t='<你的正文>';console.log('sha256:
 - 重新生成：`node sidecar/reliability/long-context/generator.mjs`
 - 离线校验：`node sidecar/reliability/long-context/validate.mjs`
 - 组装可运行案例：`node sidecar/reliability/long-context/build-cases.mjs`（产物在 `.generated/`，可经 `--cases` 喂给本测试器的 runner 分档执行；完整三试矩阵约 162 次调用）
+- 已保存证据离线重评：`node sidecar/reliability/rescore.mjs`（只读取 `response.text` 与当前 oracle，不发网络请求；支持 `--run <run-id>`、`--evidence`、`--fixtures`、`--oracle`）

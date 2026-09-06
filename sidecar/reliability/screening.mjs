@@ -20,6 +20,7 @@ export const ALL_RESULTS = [RESULT_PASS_LIKELY, RESULT_FAIL_LIKELY, RESULT_NEEDS
 const EXPLICIT_UNKNOWN_MARKERS = [
   "未知", "不确定", "无法确定", "不能确定", "无法判断", "不能判断", "不得而知", "无从得知",
   "未提及", "没有提到", "并未提及", "没有说明", "未说明", "没有交代", "未交代", "不清楚", "材料中没有",
+  "无法得知", "没有提供", "没有出现", "文中没有", "未提供", "不存在",
 ];
 
 // 推断/保留措辞标记：事实与推测边界，出现即进入人工复核。
@@ -48,6 +49,20 @@ const NEGATION_WINDOW = 8;
 
 function lower(s) {
   return String(s).toLowerCase();
+}
+
+/**
+ * 评分前剥离常见 markdown 标记（design D1）：`**`、`*`、`>`、`#`、反引号。
+ * 只用于评分，不用于保存；证据仍保留原始回答。剥离后短语可恢复连续，
+ * 例如「**不在**印刷厂工作」→「不在印刷厂工作」。
+ */
+function stripMarkdown(text) {
+  return text
+    .replace(/\*\*/g, "")
+    .replace(/\*/g, "")
+    .replace(/`/g, "")
+    .replace(/>/g, "")
+    .replace(/#/g, "");
 }
 
 /** 目标短语在文本中的首次出现位置（大小写不敏感，中文无影响）。找不到返回 -1。 */
@@ -143,6 +158,14 @@ function hasAssertedOccurrence(text, phrase) {
 }
 
 /**
+ * mustContain 专用：是否存在未被否定的出现（直接断言或引用）（design D2）。
+ * 引用正确事实作答 = 模型自己的结论，故引用也命中；只有被否定才不算命中。
+ */
+function hasSatisfiedOccurrence(text, phrase) {
+  return classifyPhraseOccurrences(text, phrase).some((c) => c === "asserted" || c === "quoted");
+}
+
+/**
  * mustNegate 目标是否被满足：至少一次明确否定（含引用内否定），且没有未被引用、
  * 未被否定的直接断言与之矛盾。引用否定「我没有偷书」可满足；「她说没偷，但她确实偷了」不可。
  */
@@ -174,7 +197,8 @@ export function screenAnswer(expect, answer) {
   const wrongConclusions = Array.isArray(expect?.wrongConclusions) ? expect.wrongConclusions : [];
   const allowedUncertainty = Array.isArray(expect?.allowedUncertainty) ? expect.allowedUncertainty : [];
 
-  const text = typeof answer === "string" ? answer : "";
+  // 评分前剥离 markdown（design D1）：只对纯文本评分，证据仍保存原始回答。
+  const text = stripMarkdown(typeof answer === "string" ? answer : "");
   if (text.trim() === "") {
     return { result: RESULT_FAIL_LIKELY, reasons: ["空回答（协议完成但无正文）"] };
   }
@@ -205,15 +229,11 @@ export function screenAnswer(expect, answer) {
     };
   }
 
-  if (explicitUnknown.length > 0 || hedge.length > 0) {
-    const markers = [...explicitUnknown, ...hedge].join("、");
-    return { result: RESULT_NEEDS_REVIEW, reasons: [`答案含不确定/推断表达（${markers}），但案例预期确定性事实，需人工复核`] };
-  }
-
   // 4. 事实边界
   const reasons = [];
 
-  const missing = mustContain.filter((f) => !hasAssertedOccurrence(text, f));
+  // mustContain 采用非对称引文处理：出现即命中（含引用，只要未被否定）（design D2）。
+  const missing = mustContain.filter((f) => !hasSatisfiedOccurrence(text, f));
   if (missing.length > 0) reasons.push(`未明确命中预期事实：${missing.join("、")}`);
 
   const unnegated = mustNegate.filter((f) => !isNegationSatisfied(text, f));
@@ -222,10 +242,22 @@ export function screenAnswer(expect, answer) {
   const quotedWrongs = wrongConclusions.filter((wc) => classifyPhraseOccurrences(text, wc).some((c) => c === "quoted"));
   if (quotedWrongs.length > 0) reasons.push(`错误结论以引用形式出现，无法判定：${quotedWrongs.join("、")}`);
 
-  if (reasons.length === 0) {
-    return { result: RESULT_PASS_LIKELY, reasons: ["命中预期事实边界，且无错误结论/不确定表达"] };
+  if (reasons.length > 0) {
+    // 结论本身不确定：事实边界未命中 / 未否定 / 引用错误结论，含推断措辞时一并注明（design D4）。
+    if (hedge.length > 0) reasons.push(`答案含推断措辞：${hedge.join("、")}`);
+    return { result: RESULT_NEEDS_REVIEW, reasons };
   }
-  return { result: RESULT_NEEDS_REVIEW, reasons };
+
+  // 事实边界已明确命中，但答案仍显式表达"未知"（如「材料没提到」）→ 保守复核。
+  if (explicitUnknown.length > 0) {
+    return { result: RESULT_NEEDS_REVIEW, reasons: [`答案含不确定表达（${explicitUnknown.join("、")}），但案例预期确定性事实，需人工复核`] };
+  }
+
+  // 事实边界明确命中、无错误结论、无显式未知：单有推断措辞不阻断（design D4）。
+  if (hedge.length > 0) {
+    return { result: RESULT_PASS_LIKELY, reasons: [`命中预期事实边界；含推断措辞（${hedge.join("、")}）但结论明确，不阻断`] };
+  }
+  return { result: RESULT_PASS_LIKELY, reasons: ["命中预期事实边界，且无错误结论/不确定表达"] };
 }
 
 /** 人类复核结论（design.md D3）：独立于自动结果，另存。 */
