@@ -1,6 +1,6 @@
 // driver-adapter.mjs — 真实 DSH JSONL 驱动适配器（@dsh-reliability/core）
 // 实现 DshAdapter 接口，把 runReliability 的会话/发送/取消/结束映射到真实 DSH 驱动 JSONL 协议。
-// 由 CLI 的 real 模式启用。driverPath 必须显式提供（真实 DSH 驱动脚本不在发布包内，见设计文档）。
+// 由 CLI 的 real 模式启用。driverPath 必须显式提供（真实 DSH 驱动脚本不在发布包内，需外部提供）。
 // apiKey 只从环境变量注入，绝不进入证据、日志或标准输出。
 import { randomUUID } from "node:crypto";
 import { DriverClient } from "./driver-client.mjs";

@@ -3,7 +3,7 @@
 // replay_done / send_message / cancel_message / end_session / shutdown；ready / session_started /
 // replay_ok / delta / message_done / message_failed / session_ended / error）。
 //
-// 关键差异：本模块自包含，不依赖 Next Story sidecar 路径。驱动脚本路径由调用方注入
+// 关键差异：本模块自包含。驱动脚本路径由调用方注入
 // （DriverAdapter 构造参数 driverPath），运行时只负责进程生命周期、JSONL 收发、每步超时与终态处理。
 import { spawn } from "node:child_process";
 import { dirname } from "node:path";

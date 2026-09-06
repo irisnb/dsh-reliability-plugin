@@ -52,7 +52,7 @@ function isOutputDirWritable(dir) {
   }
 }
 
-/** 从 cwd 向上查找 @deepseek-ai/dsh 的 package.json（已安装包，不依赖仓库 sidecar 路径）。 */
+/** 从 cwd 向上查找 @deepseek-ai/dsh 的 package.json（已安装包，不依赖仓库内硬编码路径）。 */
 function findDshPackage(cwd = process.cwd()) {
   let dir = resolve(cwd);
   for (let i = 0; i < 8; i++) {

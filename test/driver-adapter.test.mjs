@@ -1,6 +1,6 @@
 // driver-adapter.test.mjs — 真实 JSONL DSH Driver Adapter 的离线替身验证
 // 覆盖评审阻塞项：
-//   1) real 模式使用真正 JSONL DSH Driver Adapter（自包含，不依赖 Next Story sidecar 路径），
+//   1) real 模式使用真正 JSONL DSH Driver Adapter（自包含，驱动脚本路径由调用方注入），
 //      可经离线替身（fake-dsh-driver.mjs）端到端验证协议，真实 DSH 容器/API 仍需外部验证。
 import assert from "node:assert/strict";
 import test from "node:test";
