@@ -33,7 +33,7 @@
     "@tiptap/extension-font-family": "2.27.2",
     "@tiptap/extension-heading": "2.27.2",
     "@tiptap/extension-highlight": "2.27.2",
-    "@tiptap/extension-history": "2.27.2",
+    "@tiptap/extension-history": "3.31.2",
     "@tiptap/extension-italic": "2.27.2",
     "@tiptap/extension-link": "2.27.2",
     "@tiptap/extension-list-item": "2.27.2",
