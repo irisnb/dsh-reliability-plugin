@@ -90,7 +90,7 @@ type TestRunOptions = {
   model: string
   apiBase: string
   runId?: string
-  mode: "real" | "mock"
+  mode: "real" | "api" | "mock"
   outputDir: string
 }
 
@@ -132,7 +132,7 @@ interface ProbeSink {
 - 订阅 DSH Agent 和 LLM 生命周期事件；
 - 记录实际测试请求与完整响应的结构化摘要；
 - 为测试运行提供 Mock LLM；
-- 在测试配置中按需注入超时、取消、协议错误和异常退出等故障；
+- 在测试配置中按需注入超时、取消、协议错误和模拟异常退出等故障；
 - 将观测事件交给 `ProbeSink`，由 core 统一保存证据。
 
 插件不负责：
@@ -153,7 +153,7 @@ README 第一屏直接提供最短路径。用户可以选择 npm 或 Git 部署
 git clone https://github.com/OWNER/dsh-reliability-plugin.git
 cd dsh-reliability-plugin
 npm install
-npm run doctor
+npx dsh-reliability doctor
 npm test
 ```
 
@@ -168,16 +168,25 @@ npx dsh-reliability doctor
 ### 离线验证
 
 ```bash
-npm run test:offline
+npx dsh-reliability run --mode mock
 ```
 
 离线验证不需要 API key，不请求真实模型，使用 Mock LLM 检查插件加载、案例校验、评分、证据输出和故障注入。
 
 ### 真实模型测试
 
+真实 DSH 测试经 JSONL 驱动适配器（`--mode real`），需要驱动脚本路径与 `DEEPSEEK_API_KEY`：
+
 ```powershell
 $env:DEEPSEEK_API_KEY = "your-key"
-npx dsh-reliability run --model deepseek-v4-pro
+$env:DSH_DRIVER_PATH = "/path/to/driver.mjs"
+npx dsh-reliability run --mode real --model deepseek-v4-pro --driver /path/to/driver.mjs
+```
+
+只有 DeepSeek API key 而没有 DSH 容器时，可用兼容 API 测试器（`--mode api`，OpenAI 兼容 REST 端点，非 DSH 测试）：
+
+```powershell
+npx dsh-reliability run --mode api --model deepseek-v4-pro
 ```
 
 API key 只从环境变量读取，不能进入案例、报告、证据、标准输出或错误日志。真实测试不进入公开 CI，避免泄露密钥和产生不可控费用。

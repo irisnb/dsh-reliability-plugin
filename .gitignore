@@ -47,10 +47,14 @@ coverage/
 Thumbs.db
 desktop.ini
 
-# sidecar Ì½Õë/²âÊÔµÄÁÙÊ±ÔËĞĞÄ¿Â¼ÓëÉú³ÉÅäÖÃ
+# sidecar Ì½ï¿½ï¿½/ï¿½ï¿½ï¿½Ôµï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Ä¿Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 sidecar/**/.probe-home/
 sidecar/**/.dump-home/
 sidecar/**/.test-home/
 sidecar/**/.gen-home/
 sidecar/probe/cordis.probe.yaml
 sidecar/probe/cordis.dump.yaml
+
+# dsh-reliability-plugin CLI è¿è¡Œäº§ç‰©ï¼ˆä¸å…¥åº“ï¼‰
+artifacts/
+dsh-reliability.config.json

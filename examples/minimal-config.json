@@ -1,0 +1,7 @@
+{
+  "model": "deepseek-v4-pro",
+  "mode": "mock",
+  "cases": "fixtures/basic.jsonl",
+  "out": "artifacts/runs",
+  "apiBase": "https://api.deepseek.com"
+}

@@ -3,6 +3,9 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -12,6 +15,8 @@
     "tauri:build": "npm run tauri build",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
+    "test": "npm run test:reliability && node --test test/*.test.mjs",
+    "test:plugin": "node --test test/*.test.mjs",
     "test:frontend": "node --test tests/*.test.ts",
     "test:reliability": "node --test sidecar/reliability/tests/*.test.mjs",
     "test:rust": "cargo test --manifest-path src-tauri/Cargo.toml",
@@ -48,5 +53,23 @@
     "typescript": "~5.6.2",
     "typescript-eslint": "^8.67.0",
     "vite": "~6.4.3"
-  }
+  },
+  "description": "Next Story 是一个带 AI 思考辅助的剧本写作桌面编辑器。它希望降低开始创作和获得帮助的前置门槛，把认真讲述自己故事的权利交给每一个想创作的人。",
+  "main": "eslint.config.js",
+  "directories": {
+    "doc": "docs",
+    "example": "examples",
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/irisnb/next-story.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/irisnb/next-story/issues"
+  },
+  "homepage": "https://github.com/irisnb/next-story#readme"
 }
