@@ -1,0 +1,33 @@
+# ===== 依赖 =====
+node_modules/
+
+# ===== 密钥 / 环境变量（绝不入库）=====
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+secrets.json
+
+# ===== 日志 / 临时产物 =====
+*.log
+npm-debug.log*
+tmp/
+temp/
+*.tmp
+
+# ===== 测试 / 覆盖率 =====
+coverage/
+.nyc_output/
+
+# ===== 编辑器 / 系统 =====
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== dsh-reliability-plugin CLI 运行产物（不入库）=====
+artifacts/
+dsh-reliability.config.json

@@ -1,0 +1,24 @@
+{
+  "name": "@dsh-reliability/core",
+  "version": "0.1.0",
+  "description": "DSH 回答可靠性测试器的稳定核心：案例加载、运行编排、保守自动初筛与证据保存",
+  "type": "module",
+  "main": "src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs"
+  },
+  "files": [
+    "src"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "dsh",
+    "deepseek",
+    "reliability-testing",
+    "llm-testing",
+    "cordis"
+  ]
+}

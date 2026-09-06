@@ -1,0 +1,29 @@
+{
+  "name": "@dsh-reliability/monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "test:reliability": "node --test test/*.test.mjs"
+  },
+  "description": "DSH 回答可靠性测试器：标准 DSH Cordis 测试插件 + 开箱即用 CLI（monorepo）",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/irisnb/dsh-reliability-plugin.git"
+  },
+  "keywords": [
+    "dsh",
+    "deepseek",
+    "cordis",
+    "reliability-testing",
+    "llm-testing"
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "name": "dsh-reliability-plugin",
+  "version": "0.1.0",
+  "description": "DSH 回答可靠性测试器：开箱即用 CLI，离线 mock 验证与真实模型测试",
+  "type": "module",
+  "bin": {
+    "dsh-reliability": "bin/dsh-reliability.mjs"
+  },
+  "main": "src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs"
+  },
+  "files": [
+    "bin",
+    "src",
+    "fixtures"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@dsh-reliability/core": "0.1.0"
+  },
+  "keywords": [
+    "dsh",
+    "deepseek",
+    "cordis",
+    "reliability-testing",
+    "llm-testing",
+    "cli"
+  ]
+}
